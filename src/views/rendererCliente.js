@@ -50,6 +50,27 @@ let cityClient = document.getElementById('inputCityClient')
 let ufClient = document.getElementById('inputUFClient')
 
 // ============================================================
+// == Manupulação do Enter ======================================
+//manipulação de enter como se usa em Games
+function teclaEnter(event) {
+    if (event.key === "Enter"){
+        event.preventDefault() // ignorar o comportamento padrão
+        //Executar o metodo de busca do cliente
+        searchName()
+    }
+}
+
+//Escuta do teclado / keydown apertar a tecla
+frmClient.addEventListener('keydown', teclaEnter)
+
+function restaurarEnter(){
+    frmClient.removeEventListener('keydown', teclaEnter) //removeEventListener - remove o evento de ouvir o parametro
+}
+
+// ============================================================
+// == Manupulação do Enter - Fim ==============================
+
+// ============================================================
 // == CRUD Create/Update ======================================
 
 //Evento associado ao botão submit (uso das validações do html)
@@ -95,6 +116,8 @@ api.setName((args) => {
     nameClient.focus()    
     // copiar o nome do cliente para o campo nome
     nameClient.value = busca
+    //restaurar tecla enter
+    restaurarEnter()
 })
 
 function searchName() {
@@ -131,6 +154,8 @@ function searchName() {
                 neighborhoodClient.value = c.bairroCliente
                 cityClient.value = c.cidadeCliente
                 ufClient.value = c.ufCliente
+                //resaurar a tecla enter
+                restaurarEnter()
             })
         })
     }
