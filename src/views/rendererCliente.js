@@ -23,7 +23,7 @@ function buscarCEP() {
 // a constante foco obtem o elemento html (input) identificado como 'searchClient'
 const foco = document.getElementById('searchClient')
 
-//criar um vetor global para extrair os dados do cliente 9Manipulação de dados)
+// Criar um vetor global para extrair os dados do cliente
 let arrayClient = []
 
 // Iniciar a janela de clientes alterando as propriedades de alguns elementos
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 //captura dos dados dos inputs do formulário (Passo 1: Fluxo)
-let frmClient = document.getElementById('frmClient')
+let frmClient = document.getElementById('formClient')
 let nameClient = document.getElementById('inputNameClient')
 let cpfClient = document.getElementById('inputCPFClient')
 let emailClient = document.getElementById('inputEmailClient')
@@ -81,44 +81,65 @@ frmClient.addEventListener('submit', async (event) => {
 // ============================================================
 
 
-// == CRUD Read ==================================
 // ============================================================
+// == CRUD Read ===============================================
+
+// setar o nome do cliente para fazer um novo cadastro se a busca retornar que o cliente não está cadastrado.
+api.setName((args) => {
+    console.log("teste do IPC 'set-name'")
+    // "recortar" o nome da busca e setar no campo nome do form
+    let busca = document.getElementById('searchClient').value
+    // limpar o campo de busca (foco foi capturado de forma global)
+    foco.value=""
+    // foco no campo nome
+    nameClient.focus()    
+    // copiar o nome do cliente para o campo nome
+    nameClient.value = busca
+})
 
 function searchName() {
-    //console.log('Teste do botão de pesquisar')
+    //console.log("teste do botão buscar")
     //capturar o nome a ser pesquisado (passo 1)
     let cliName = document.getElementById('searchClient').value
-    console.log(cliName)
-    //enviar o nome do cliente  ao Main (passo2)
-    api.searchName(cliName)
-    //receber os dados do cliente (passo 5)
-    api.renderClient((event, client) => {
-        //teste do recebimento do cliente
-        console.log(client)
-        //passo 6 renderização dos ddos do cliente (prencher os inputs do form) - 
-        //Não esquecer de converter os dados do cliente para JSON
-        const clientData = JSON.parse(client)
-        arrayClient = clientData
-        //uso do forEach para percorer o vetor e extrair os dados
-        arrayClient.forEach((c) => {
-            nameClient.value = c.nomeCliente
-            cpfClient.value = c.cpfCliente
-            emailClient.value = c.emailCliente
-            phoneClient.value = c.foneCliente
-            cepClient.value = c.cepCliente
-            addressClient.value = c.logradouroCliente
-            numberClient.value = c.numeroCliente
-            complementClient.value = c.complementoCliente
-            neighborhoodClient.value = c.bairroCliente
-            cityClient.value = c.cidadeCliente
-            ufClient.value = c.ufCliente
+    console.log(cliName) // teste do passo 1
+    // validação de campo obrigatório
+    // se o campo de busca não foi preenchido
+    if (cliName === "") {
+        // enviar ao main um pedido para alertar o usuário
+        // precisa usar o preload.js
+        api.validateSearch()
+    } else {
+        //enviar o nome do cliente ao main (passo 2)
+        api.searchName(cliName)
+        //receber os dados do cliente (passo 5)
+        api.renderClient((event, client) => {
+            //teste de recebimento dos dados do cliente
+            console.log(client)
+            //passo 6 renderização dos dados do cliente (preencher os inputs do form) - Não esquecer de converte os dados de string para JSON
+            const clientData = JSON.parse(client)
+            arrayClient = clientData
+            // uso do forEach para percorrer o vetor e extrair os dados
+            arrayClient.forEach((c) => {
+                nameClient.value = c.nomeCliente
+                cpfClient.value = c.cpfCliente
+                emailClient.value = c.emailCliente
+                phoneClient.value = c.foneCliente
+                cepClient.value = c.cepCliente
+                addressClient.value = c.logradouroCliente
+                numberClient.value = c.numeroCliente
+                complementClient.value = c.complementoCliente
+                neighborhoodClient.value = c.bairroCliente
+                cityClient.value = c.cidadeCliente
+                ufClient.value = c.ufCliente
+            })
         })
-    })
-
-
-    // == FIM CRUD Read ==================================
-    // ============================================================
+    }
 }
+
+// == Fim - CRUD Read =========================================
+// ============================================================
+
+
 // ============================================================
 // == Reset Form ==============================================
 function resetForm() {
