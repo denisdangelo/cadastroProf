@@ -28,9 +28,11 @@ let arrayClient = []
 
 // Iniciar a janela de clientes alterando as propriedades de alguns elementos
 document.addEventListener('DOMContentLoaded', () => {
-    // Desativar os botões
+    // Desativar os botões editar e excluir
     btnUpdate.disabled = true
     btnDelete.disabled = true
+    //ativar o botão adicionar
+    btnCreate.disabled = false
     // Foco na busca do cliente
     foco.focus()
 })
@@ -156,6 +158,11 @@ function searchName() {
                 ufClient.value = c.ufCliente
                 //resaurar a tecla enter
                 restaurarEnter()
+                //desastivar o botão adicionar
+                btnCreate.disabled = true
+                //ativar os botões editar e excluir
+                btnUpdate.disabled = false
+                btnDelete.disabled = false
             })
         })
     }
